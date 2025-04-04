@@ -1,9 +1,7 @@
 package lib;
-
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,5 +106,36 @@ public class ApiCoreRequests {
     public Response editUserWithShortFirstName(String url, Map<String, String> editData, String token, String cookie) {
         return makePutRequest(url, editData, token, cookie);
     }
+
+    // Удаление с авторизацией
+    @Step("Make DELETE request with auth")
+    public Response makeDeleteRequest(String url, String token, String cookie) {
+        return RestAssured
+                .given()
+                .header("x-csrf-token", token != null ? token : "")
+                .cookie("auth_sid", cookie != null ? cookie : "")
+                .delete(url)
+                .andReturn();
+    }
+    // Запрос м авторизацией
+    @Step("Make GET request with auth")
+    public Response makeGetRequest(String url, String token, String cookie) {
+        return RestAssured
+                .given()
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .get(url)
+                .andReturn();
+    }
+
+    // Запрос без авторизации
+    @Step("Make GET request without auth")
+    public Response makeGetRequestWithoutAuth(String url) {
+        return RestAssured
+                .given()
+                .get(url)
+                .andReturn();
+    }
 }
+
 
