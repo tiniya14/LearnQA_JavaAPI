@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ApiCoreRequests {
-    private static final String BASE_URL = "https://playground.learnqa.ru/api/user/";
+    private static final String BASE_URL = "https://playground.learnqa.ru/api_dev/user/";
 
     public String getBaseUrl() {
         return BASE_URL;
@@ -88,6 +88,7 @@ public class ApiCoreRequests {
                 .post(BASE_URL + "login")
                 .andReturn();
     }
+
     // Регистрация новым пользователем
     @Step("Register new random user")
     public Response registerRandomUser() {
@@ -117,6 +118,7 @@ public class ApiCoreRequests {
                 .delete(url)
                 .andReturn();
     }
+
     // Запрос м авторизацией
     @Step("Make GET request with auth")
     public Response makeGetRequest(String url, String token, String cookie) {
@@ -134,6 +136,34 @@ public class ApiCoreRequests {
         return RestAssured
                 .given()
                 .get(url)
+                .andReturn();
+    }
+
+    @Step("Make GET auth request")
+    public Response makeGetAuthRequest(String header, String cookie) {
+        return RestAssured
+                .given()
+                .header("x-csrf-token", header)
+                .cookie("auth_sid", cookie)
+                .get(BASE_URL + "auth")
+                .andReturn();
+    }
+
+    @Step("Make GET auth request with cookie only")
+    public Response makeGetAuthRequestWithCookieOnly(String cookie) {
+        return RestAssured
+                .given()
+                .cookie("auth_sid", cookie)
+                .get(BASE_URL + "auth")
+                .andReturn();
+    }
+
+    @Step("Make GET auth request with header only")
+    public Response makeGetAuthRequestWithHeaderOnly(String header) {
+        return RestAssured
+                .given()
+                .header("x-csrf-token", header)
+                .get(BASE_URL + "auth")
                 .andReturn();
     }
 }
