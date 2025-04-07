@@ -1,4 +1,7 @@
 package tests;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import lib.ApiCoreRequests;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -25,7 +28,7 @@ public class UserRegisterTest extends BaseTestCase {
         Response responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post(apiCoreRequests.getBaseUrl())
                 .andReturn();
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
@@ -33,6 +36,8 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.BLOCKER)
+    @Owner("ivanov")
     public void testCreateUserSuccessfully() {
         String email = DataGenerator.getRandomEmail();
 
@@ -41,7 +46,7 @@ public class UserRegisterTest extends BaseTestCase {
         Response responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user")
+                .post(apiCoreRequests.getBaseUrl())
                 .andReturn();
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);

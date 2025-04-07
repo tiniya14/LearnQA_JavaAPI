@@ -1,5 +1,8 @@
 package tests;
 
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.TmsLink;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
@@ -10,14 +13,13 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     // Тест на удаление пользователя по id2
     @Test
+    @Severity(SeverityLevel.CRITICAL)
     public void testDeleteProtectedUser() {
 
         Map<String, String> authData = new HashMap<>();
@@ -42,6 +44,7 @@ public class UserDeleteTest extends BaseTestCase {
 
     // Удаление созданного пользователя
     @Test
+    @TmsLink("User-Delete-01")
     public void testDeleteJustCreatedUser() {
         // 1. Создание нового пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();

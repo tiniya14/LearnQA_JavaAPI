@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.BaseTestCase;
@@ -10,9 +11,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import lib.Assertions;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 
 @Epic("Autorisation cases")
@@ -35,6 +33,9 @@ public class UserAuthTest extends BaseTestCase {
     @Test
     @Description("This test successefully autorize user by email and password")
     @DisplayName("Test positive auth user")
+    @Severity(SeverityLevel.BLOCKER)
+    @TmsLink("UserAuth-01")
+    @Owner ("ivanov")
     public void testAuthUser() {
         Response test = apiCoreRequests.makeGetAuthRequest(this.header, this.cookie);
 

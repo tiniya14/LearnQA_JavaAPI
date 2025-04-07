@@ -1,5 +1,9 @@
 package tests;
 
+import io.qameta.allure.Issue;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.TmsLink;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -16,6 +20,7 @@ public class UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     public void testEditJustCreatedTest() {
         //Генерация пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -23,7 +28,7 @@ public class UserEditTest extends BaseTestCase {
         JsonPath responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post(apiCoreRequests.getBaseUrl())
                 .jsonPath();
 
         String userId = responseCreateAuth.getString("id");
@@ -36,7 +41,7 @@ public class UserEditTest extends BaseTestCase {
         Response responseGetAuth = RestAssured
                 .given()
                 .body(authData)
-                .post("https://playground.learnqa.ru/api/user/login")
+                .post(apiCoreRequests.getBaseUrl() + "login")
                 .andReturn();
 
         //Изменение
@@ -49,7 +54,7 @@ public class UserEditTest extends BaseTestCase {
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
                 .body(editData)
-                .put("https://playground.learnqa.ru/api/user/" + userId)
+                .put(apiCoreRequests.getBaseUrl() + userId)
                 .andReturn();
 
         //Получение измененных данных
@@ -57,13 +62,14 @@ public class UserEditTest extends BaseTestCase {
                 .given()
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
-                .get("https://playground.learnqa.ru/api/user/" + userId)
+                .get(apiCoreRequests.getBaseUrl() + userId)
                 .andReturn();
 
         Assertions.asserJsonByName(responseUserData, "firstName", newName);
     }
 
     @Test
+    @TmsLink ("User_Edit_1")
     public void testEditUserNotAuth() {
         // Регистрация пользователя
         Response responseCreateAuth = apiCoreRequests.registerRandomUser();
